@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>国庆快乐 给自己换个头像</title>
+		<style>
+			html,
+			body {
+				margin: 0;
+				height: 100%;
+			}
+			body {
+				box-sizing: border-box;
+				padding: 20px 0;
+			}
+			h2 {
+				text-align: center;
+				margin-top: 0;
+			}
+			canvas {
+				display: block;
+				width: 300px;
+				height: 300px;
+				margin: 0 auto;
+			}
+			.a-upload {
+				position: relative;
+				display: block;
+				width: 100px;
+				margin: 20px auto 10px;
+				padding: 4px 10px;
+				height: 20px;
+				line-height: 20px;
+				cursor: pointer;
+				color: #888;
+				background: #fafafa;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				overflow: hidden;
+				*zoom: 1;
+				text-align: center;
+				text-decoration: none;
+			}
+
+			.a-upload input {
+				position: absolute;
+				font-size: 100px;
+				right: 0;
+				top: 0;
+				opacity: 0;
+				filter: alpha(opacity=0);
+				cursor: pointer;
+			}
+
+			.a-upload:hover {
+				color: #444;
+				background: #eee;
+				border-color: #ccc;
+				text-decoration: none;
+			}
+			.center {
+				text-align: center;
+				color: #ddd;
+				margin: 0;
+				font-size: 14px;
+			}
+			.adver {
+				display: block;
+				text-align: center;
+				width: 300px;
+				height: 130px;
+				line-height: 130px;
+				margin: 20px auto;
+				border: 1px solid #eee;
+			}
+
+			.container {
+				position: relative;
+				width: 300px;
+				height: 300px;
+				margin: 0 auto;
+			}
+			#download {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 300px;
+				height: 300px;
+				display: block;
+				background-color: red;
+			}
+			* {
+				user-select: none;
+			}
+		</style>
+		<script>
+			var _hmt = _hmt || [];
+			(function () {
+				var hm = document.createElement('script');
+				hm.src = 'https://hm.baidu.com/hm.js?2d078f0135f7fd23463cf5d83ec0a55e';
+				var s = document.getElementsByTagName('script')[0];
+				s.parentNode.insertBefore(hm, s);
+			})();
+		</script>
+		<script type="module" crossorigin src="/webgl-mix/assets/index.8982882c.js"></script>
+	</head>
+	<body>
+		<h2>国庆快乐 给自己换个头像</h2>
+		<div class="container">
+			<canvas id="canvas"></canvas>
+			<img id="download" src="./touxiang.png" alt="loading..." />
+		</div>
+		<a href="javascript:;" class="a-upload">
+			<input
+				class="fileupload"
+				type="file"
+				name="file"
+				id="file"
+				accept="image/jpg, image/jpeg, image/gif, image/png"
+			/>
+			上传头像
+		</a>
+		<h4 class="center">正方形头像，效果更佳</h4>
+
+		<a class="adver" href="javascript:;">广告位招租</a>
+		<!-- vertex shader -->
+		<script id="vertex-shader-2d" type="x-shader/x-vertex">
+			attribute vec2 a_position;
+			attribute vec2 a_texCoord;
+
+			uniform vec2 u_resolution;
+
+			varying vec2 v_texCoord;
+
+			void main() {
+			   // convert the rectangle from pixels to 0.0 to 1.0
+			   vec2 zeroToOne = a_position / u_resolution;
+
+			   // convert from 0->1 to 0->2
+			   vec2 zeroToTwo = zeroToOne * 2.0;
+
+			   // convert from 0->2 to -1->+1 (clipspace)
+			   vec2 clipSpace = zeroToTwo - 1.0;
+
+			   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+
+			   // pass the texCoord to the fragment shader
+			   // The GPU will interpolate this value between points.
+			   v_texCoord = a_texCoord;
+			}
+		</script>
+		<!-- fragment shader -->
+		<script id="fragment-shader-2d" type="x-shader/x-fragment">
+			precision mediump float;
+
+			// our textures
+			uniform sampler2D u_image0;
+			uniform sampler2D u_image1;
+
+			// the texCoords passed in from the vertex shader.
+			varying vec2 v_texCoord;
+
+			void main() {
+				vec4 col1 = texture2D(u_image0, v_texCoord);
+				vec4 col2 = texture2D(u_image1, v_texCoord);
+				gl_FragColor = mix(col1, col2, v_texCoord.x * v_texCoord.y * 1.5);
+			}
+		</script>
+		<script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
+		<script src="https://webglfundamentals.org/webgl/resources/m4.js"></script>
+		<script src="https://webglfundamentals.org/webgl/resources/primitives.js"></script>
+		<script src="https://webglfundamentals.org/webgl/resources/texture-utils.js"></script>
+		<script src="https://webglfundamentals.org/webgl/resources/chroma.min.js"></script>
+		
+	</body>
+</html>
