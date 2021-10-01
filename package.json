@@ -1,0 +1,14 @@
+{
+	"name": "webgl-mix",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"homepage": "https://minjs1cn.github.io/webgl-mix/",
+	"scripts": {
+		"dev": "vite --port 3008",
+		"build": "vite build"
+	},
+	"devDependencies": {
+		"vite": "^2.6.1"
+	}
+}
